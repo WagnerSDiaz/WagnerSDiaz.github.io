@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wagner S. Diaz — Cybersecurity</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0608;
+      --surface:   #110d0f;
+      --border:    #2e1f28;
+      --border2:   #4a2d3a;
+      --text:      #f0e6d3;
+      --muted:     #8a7a6a;
+      --gold:      #d4a843;
+      --gold-dim:  #8a6820;
+      --crimson:   #c0392b;
+      --deep-red:  #7a1a24;
+      --purple:    #6b3fa0;
+      --purple-lt: #a374d5;
+      --teal-lt:   #4ecda4;
+    }
+
+    @keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
+    @keyframes pulse     { 0%,100% { opacity:.6; } 50% { opacity:1; } }
+    @keyframes glow      { 0%,100% { box-shadow:0 0 8px rgba(212,168,67,.1); } 50% { box-shadow:0 0 26px rgba(212,168,67,.3); } }
+    @keyframes borderGlow{ 0%,100% { border-color:var(--border); } 50% { border-color:var(--gold-dim); } }
+    @keyframes float     { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
+    @keyframes shimmer   { 0% { background-position:-200% center; } 100% { background-position:200% center; } }
+    @keyframes blink     { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #particles {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      pointer-events: none; z-index: 0; opacity: .5;
+    }
+
+    body::before {
+      content: '';
+      display: block; height: 2px; width: 100%;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--crimson), var(--gold), transparent);
+      position: fixed; top: 0; left: 0; z-index: 100;
+    }
+
+    .container {
+      max-width: 860px; margin: 0 auto;
+      padding: 2.5rem 1.25rem 5rem;
+      position: relative; z-index: 1;
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .hero {
+      background: linear-gradient(135deg, #0f080c 0%, #180f18 45%, #1a0f1a 100%);
+      border: 1px solid var(--border2);
+      border-radius: 18px;
+      padding: 2.75rem 2.25rem;
+      margin-bottom: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      animation: glow 4s ease-in-out infinite;
+    }
+    .hero::before {
+      content: '⟁';
+      position: absolute; top: 14px; right: 20px;
+      font-size: 28px; color: var(--gold-dim); opacity: .3;
+      animation: float 5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    }
+    .hero-orb1 {
+      position: absolute; top: -100px; right: -100px;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(192,57,43,.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-orb2 {
+      position: absolute; bottom: -80px; left: -80px;
+      width: 260px; height: 260px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(107,63,160,.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .avatar-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.4rem; }
+    .avatar {
+      width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--deep-red), var(--purple));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 700; color: var(--gold);
+      border: 2px solid var(--gold-dim);
+      animation: glow 4s ease-in-out infinite, float 6s ease-in-out infinite;
+      position: relative;
+    }
+    .avatar::after {
+      content: '♔';
+      position: absolute; top: -10px; right: -8px;
+      font-size: 14px; color: var(--gold); opacity: .85;
+    }
+
+    .hero-name {
+      font-size: 28px; font-weight: 700;
+      background: linear-gradient(90deg, var(--text) 20%, var(--gold) 50%, var(--text) 80%);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+    .hero-sub { font-size: 14px; color: var(--muted); margin-top: 6px; min-height: 22px; }
+    .cursor {
+      display: inline-block; width: 2px; height: 14px;
+      background: var(--gold); margin-left: 2px; vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    .rune-divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 1.2rem 0; opacity: .35;
+    }
+    .rune-divider::before, .rune-divider::after { content: ''; flex: 1; height: 1px; }
+    .rune-divider::before { background: linear-gradient(90deg, transparent, var(--gold-dim)); }
+    .rune-divider::after  { background: linear-gradient(90deg, var(--gold-dim), transparent); }
+    .rune-sym { font-size: 13px; color: var(--gold); }
+
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; }
+    .badge {
+      font-size: 12px; padding: 4px 13px; border-radius: 20px;
+      font-weight: 500; border: 1px solid; transition: transform .2s;
+    }
+    .badge:hover { transform: translateY(-1px); }
+    .badge-purple { background: rgba(107,63,160,.2);  color: var(--purple-lt); border-color: rgba(107,63,160,.5); }
+    .badge-teal   { background: rgba(42,138,106,.2);  color: var(--teal-lt);   border-color: rgba(42,138,106,.5); }
+    .badge-gold   { background: rgba(212,168,67,.12); color: var(--gold);      border-color: rgba(212,168,67,.4); }
+    .badge-red    { background: rgba(192,57,43,.15);  color: #e88;             border-color: rgba(192,57,43,.45); }
+
+    .links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.35rem; }
+    .link-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 13px; padding: 8px 16px; border-radius: 9px;
+      border: 1px solid rgba(212,168,67,.25);
+      color: #c8c0b0; background: rgba(212,168,67,.06);
+      text-decoration: none; transition: all .2s;
+    }
+    .link-btn:hover {
+      background: rgba(212,168,67,.14); border-color: rgba(212,168,67,.5);
+      color: var(--gold); transform: translateY(-1px);
+    }
+    .link-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--gold-dim);
+      margin-bottom: .8rem; margin-top: .15rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--border2), transparent);
+    }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 13px; padding: 1.2rem 1.4rem;
+      margin-bottom: 1.35rem; transition: border-color .3s;
+    }
+    .card:hover { border-color: var(--border2); }
+    .card p { font-size: 14px; color: var(--muted); line-height: 1.8; }
+
+    .certs-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 12px; margin-bottom: 1.6rem;
+    }
+    .cert-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 13px; padding: 1rem 1.1rem;
+      display: flex; flex-direction: column; gap: 5px;
+      transition: all .25s; position: relative; overflow: hidden;
+    }
+    .cert-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+      opacity: 0; transition: opacity .3s;
+    }
+    .cert-card:hover { border-color: var(--gold-dim); transform: translateY(-3px); }
+    .cert-card:hover::before { opacity: 1; }
+    .cert-icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; margin-bottom: 5px;
+    }
+    .cert-name   { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.35; }
+    .cert-issuer { font-size: 12px; color: var(--muted); }
+    .cert-exp    { font-size: 11px; color: #4a3a30; margin-top: 3px; }
+
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 10px; margin-bottom: 1.6rem;
+    }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 11px; padding: .9rem 1rem; text-align: center;
+      transition: all .25s; animation: borderGlow 5s ease-in-out infinite;
+    }
+    .stat-card:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
+    .stat-num { font-size: 22px; font-weight: 700; color: var(--gold); }
+    .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+    .tab-btn {
+      font-size: 13px; padding: 7px 16px; border-radius: 9px;
+      cursor: pointer; border: 1px solid var(--border);
+      background: var(--surface); color: var(--muted);
+      font-family: inherit; transition: all .2s;
+    }
+    .tab-btn:hover { border-color: var(--border2); color: var(--text); }
+    .tab-btn.active { background: rgba(212,168,67,.1); color: var(--gold); border-color: var(--gold-dim); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn .3s ease; }
+
+    .proj-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; margin-bottom: 1.6rem;
+    }
+    .proj-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 13px; padding: 1.1rem 1.2rem;
+      transition: all .25s; position: relative; overflow: hidden;
+    }
+    .proj-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+      opacity: 0; transition: opacity .3s;
+    }
+    .proj-card:hover { border-color: var(--border2); transform: translateY(-3px); }
+    .proj-card:hover::after { opacity: 1; }
+    .proj-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 7px; }
+    .proj-name { font-size: 15px; font-weight: 600; color: var(--text); }
+    .proj-icon { font-size: 20px; flex-shrink: 0; }
+    .proj-desc { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: .8rem; }
+    .proj-link { font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: .65rem; display: inline-block; transition: color .2s; }
+    .proj-link:hover { color: var(--text); }
+    .proj-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag {
+      font-size: 11px; padding: 3px 9px; border-radius: 6px;
+      background: rgba(255,255,255,.04); color: var(--muted); border: 1px solid var(--border);
+    }
+
+    .empty-state {
+      border: 1px dashed var(--border2); border-radius: 13px;
+      padding: 2.5rem; text-align: center;
+      color: var(--muted); font-size: 13px;
+      margin-bottom: 1.6rem;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    .empty-state span { display: block; font-size: 26px; margin-bottom: .6rem; }
+
+    footer {
+      text-align: center; font-size: 12px; color: #3a2a22;
+      padding-top: 2rem; border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--gold-dim); }
+
+    @media (max-width: 560px) {
+      .proj-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(2,1fr); }
+      .hero { padding: 2rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="container">
+
+  <div class="hero reveal">
+    <div class="hero-orb1"></div>
+    <div class="hero-orb2"></div>
+    <div class="avatar-row">
+      <div class="avatar">WD</div>
+      <div>
+        <div class="hero-name">Wagner S. Diaz</div>
+        <div class="hero-sub"><span id="typed"></span><span class="cursor"></span></div>
+      </div>
+    </div>
+    <div class="rune-divider"><span class="rune-sym">✦</span></div>
+    <div class="badges">
+      <span class="badge badge-purple">CompTIA Security+</span>
+      <span class="badge badge-teal">CySA+</span>
+      <span class="badge badge-gold">Splunk Certified</span>
+      <span class="badge badge-red">AWS in Progress</span>
+    </div>
+    <div class="links">
+      <a class="link-btn" href="https://www.linkedin.com/in/wagnerriveradiaz/" target="_blank">
+        <span class="link-dot" style="background:#4a90d4"></span>LinkedIn
+      </a>
+      <a class="link-btn" href="mailto:wagnerrivera0127@gmail.com">
+        <span class="link-dot" style="background:#4ecda4"></span>wagnerrivera0127@gmail.com
+      </a>
+      <a class="link-btn" href="https://github.com/WagnerSDiaz" target="_blank">
+        <span class="link-dot" style="background:#d4a843"></span>GitHub
+      </a>
+    </div>
+  </div>
+
+  <div class="section-label reveal">About me</div>
+  <div class="card reveal">
+    <p>
+      I'm a cybersecurity professional driven by a genuine belief that everyone deserves privacy and digital security.
+      I hold multiple CompTIA and Splunk certifications and I'm constantly pushing to level up — right now that means
+      building hands-on cloud experience with AWS. I do this because I love it, and that curiosity shows in everything I build.
+    </p>
+  </div>
+
+  <div class="section-label reveal">Certifications</div>
+  <div class="certs-grid reveal">
+    <div class="cert-card">
+      <div class="cert-icon" style="background:rgba(192,57,43,.15)">🛡️</div>
+      <div class="cert-name">CompTIA Security+</div>
+      <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Jul 2025</div>
+      <div class="cert-exp">Expires Jul 2028</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon" style="background:rgba(192,57,43,.15)">🔍</div>
+      <div class="cert-name">CompTIA CySA+</div>
+      <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Oct 2025</div>
+      <div class="cert-exp">Expires Oct 2028</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon" style="background:rgba(107,63,160,.18)">📊</div>
+      <div class="cert-name">Security Analytics Professional (CSAP)</div>
+      <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Oct 2025</div>
+      <div class="cert-exp">Stackable — Sec+ &amp; CySA+</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon" style="background:rgba(212,168,67,.12)">📡</div>
+      <div class="cert-name">Splunk Core Certified User</div>
+      <div class="cert-issuer">Splunk &nbsp;·&nbsp; Nov 2025</div>
+      <div class="cert-exp">Expires Nov 2028</div>
+    </div>
+  </div>
+
+  <div class="stats-row reveal">
+    <div class="stat-card"><div class="stat-num">4</div><div class="stat-lbl">Certifications</div></div>
+    <div class="stat-card"><div class="stat-num">2025</div><div class="stat-lbl">Active since</div></div>
+    <div class="stat-card"><div class="stat-num">☁️</div><div class="stat-lbl">AWS in progress</div></div>
+    <div class="stat-card"><div class="stat-num">∞</div><div class="stat-lbl">Still learning</div></div>
+  </div>
+
+  <div class="section-label reveal">Projects</div>
+  <div class="tabs reveal">
+    <button class="tab-btn active" onclick="switchTab('all',this)">All</button>
+    <button class="tab-btn" onclick="switchTab('blue',this)">🔵 Blue Team</button>
+    <button class="tab-btn" onclick="switchTab('red',this)">🔴 Red Team</button>
+    <button class="tab-btn" onclick="switchTab('aws',this)">☁️ AWS / Cloud</button>
+    <button class="tab-btn" onclick="switchTab('other',this)">Other</button>
+  </div>
+
+  <div id="tab-all" class="tab-panel active reveal">
+    <!--
+    =====================================================================
+    HOW TO ADD A PROJECT — copy this block and paste it above the empty-state div:
+
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="proj-top">
+          <div class="proj-name">Project Name</div>
+          <div class="proj-icon">🔐</div>
+        </div>
+        <div class="proj-desc">One or two sentences about what it does.</div>
+        <a class="proj-link" href="https://github.com/WagnerSDiaz/REPO" target="_blank">→ View on GitHub</a>
+        <div class="proj-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Splunk</span>
+        </div>
+      </div>
+    </div>
+    =====================================================================
+    -->
+    <div class="empty-state">
+      <span>✦</span>
+      Projects incoming — each one will appear here and sort into the right tab automatically.
+    </div>
+  </div>
+
+  <div id="tab-blue" class="tab-panel">
+    <div class="empty-state"><span>🔵</span>Blue team projects will appear here.</div>
+  </div>
+  <div id="tab-red" class="tab-panel">
+    <div class="empty-state"><span>🔴</span>Red team projects will appear here.</div>
+  </div>
+  <div id="tab-aws" class="tab-panel">
+    <div class="empty-state"><span>☁️</span>AWS / Cloud projects will appear here.</div>
+  </div>
+  <div id="tab-other" class="tab-panel">
+    <div class="empty-state"><span>📁</span>Everything else lives here.</div>
+  </div>
+
+  <footer class="reveal">Wagner S. Diaz &nbsp;·&nbsp; <span>✦</span> &nbsp;·&nbsp; Built with GitHub Pages</footer>
+</div>
+
+<script>
+  const phrases = [
+    'Cybersecurity Professional',
+    'Blue Team Defender',
+    'Cloud Security Learner',
+    'CompTIA & Splunk Certified',
+  ];
+  let pi = 0, ci = 0, deleting = false;
+  const el = document.getElementById('typed');
+  function type() {
+    const word = phrases[pi];
+    if (!deleting) {
+      el.textContent = word.slice(0, ++ci);
+      if (ci === word.length) { deleting = true; setTimeout(type, 1800); return; }
+    } else {
+      el.textContent = word.slice(0, --ci);
+      if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+    }
+    setTimeout(type, deleting ? 45 : 80);
+  }
+  type();
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const COLORS = ['rgba(212,168,67,','rgba(192,57,43,','rgba(107,63,160,','rgba(240,230,211,'];
+  const pts = Array.from({length: 55}, () => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.4 + .3,
+    dx: (Math.random() - .5) * .3,
+    dy: (Math.random() - .5) * .3,
+    c: COLORS[Math.floor(Math.random() * COLORS.length)],
+    a: Math.random() * .45 + .1,
+  }));
+
+  (function draw() {
+    ctx.clearRect(0, 0, W, H);
+    pts.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.c + p.a + ')';
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+    });
+    requestAnimationFrame(draw);
+  })();
+</script>
+</body>
+</html>
