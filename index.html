@@ -29,6 +29,7 @@
     @keyframes borderGlow{ 0%,100% { border-color:var(--border); } 50% { border-color:var(--gold-dim); } }
     @keyframes float     { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
     @keyframes blink     { 0%,100% { opacity:1; } 50% { opacity:0; } }
+    @keyframes wheelSpin { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
 
     html { scroll-behavior: smooth; }
 
@@ -118,21 +119,15 @@
 
     .hero-name {
       font-size: 28px; font-weight: 700;
-      background: linear-gradient(90deg, var(--text) 20%, var(--gold) 50%, var(--text) 80%);
       color: #f0e6d3;
-      text-shadow 0 0 0px rgba (212,168,67,0);
       transition: text-shadow .3s ease, color .3s ease;
       cursor: default;
-      -webkit-text-fill-color: unset;
-      background: none;
     }
-    
-     .hero-name:hover {
-       color: #d4a843;
-       text-shadow: 0 4px 8px rgba(0,0,0,.8), 0 0 20px rgba(212,168,67,.6), 0 0 40px rgba(212,168,67,.3);
-     }
-    
+    .hero-name:hover {
+      color: #d4a843;
+      text-shadow: 0 4px 8px rgba(0,0,0,.8), 0 0 20px rgba(212,168,67,.6), 0 0 40px rgba(212,168,67,.3);
     }
+
     .hero-sub { font-size: 14px; color: var(--muted); margin-top: 6px; min-height: 22px; }
     .cursor {
       display: inline-block; width: 2px; height: 14px;
@@ -193,32 +188,81 @@
     .card:hover { border-color: var(--border2); }
     .card p { font-size: 14px; color: var(--muted); line-height: 1.8; }
 
-    .certs-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
-      gap: 12px; margin-bottom: 1.6rem;
+    /* ── Cert Wheel ── */
+    .wheel-wrapper {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      margin-bottom: 1.6rem;
+      overflow: hidden;
+    }
+    .wheel-wrapper::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 80px; z-index: 2;
+      background: linear-gradient(90deg, var(--bg), transparent);
+      pointer-events: none;
+    }
+    .wheel-wrapper::after {
+      content: '';
+      position: absolute; right: 0; top: 0; bottom: 0;
+      width: 80px; z-index: 2;
+      background: linear-gradient(270deg, var(--bg), transparent);
+      pointer-events: none;
+    }
+    .wheel-track {
+      display: flex;
+      gap: 16px;
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      animation: wheelSpin 20s linear infinite;
+      width: max-content;
+    }
+    .wheel-wrapper:hover .wheel-track {
+      animation-play-state: paused;
     }
     .cert-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 13px; padding: 1rem 1.1rem;
-      display: flex; flex-direction: column; gap: 5px;
-      transition: all .25s; position: relative; overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 190px;
+      flex-shrink: 0;
+      height: 200px;
+      transition: all .35s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(212,168,67,.08), 0 0 25px rgba(212,168,67,.04);
+      cursor: default;
     }
     .cert-card::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
       opacity: 0; transition: opacity .3s;
     }
-    .cert-card:hover { border-color: var(--gold-dim); transform: translateY(-3px); }
+    .cert-card:hover {
+      border-color: var(--gold-dim);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 0 15px rgba(212,168,67,.25), 0 0 35px rgba(212,168,67,.12), 0 0 60px rgba(212,168,67,.06);
+      z-index: 10;
+    }
     .cert-card:hover::before { opacity: 1; }
-    .cert-icon {
-      width: 36px; height: 36px; border-radius: 9px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; margin-bottom: 5px;
+    .cert-card img {
+      transition: filter .35s ease;
+      filter: drop-shadow(0 0 4px rgba(212,168,67,.2));
+    }
+    .cert-card:hover img {
+      filter: drop-shadow(0 0 8px rgba(212,168,67,.7));
     }
     .cert-name   { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.35; }
     .cert-issuer { font-size: 12px; color: var(--muted); }
     .cert-exp    { font-size: 11px; color: #4a3a30; margin-top: 3px; }
 
+    /* ── Stats ── */
     .stats-row {
       display: grid; grid-template-columns: repeat(4, 1fr);
       gap: 10px; margin-bottom: 1.6rem;
@@ -232,18 +276,22 @@
     .stat-num { font-size: 22px; font-weight: 700; color: var(--gold); }
     .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
-    .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+    /* ── Tabs ── */
+    .tabs { display: flex; flex-direction: row; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
     .tab-btn {
-      font-size: 13px; padding: 7px 16px; border-radius: 9px;
+      font-size: 13px; padding: 10px 20px; border-radius: 9px;
       cursor: pointer; border: 1px solid var(--border);
       background: var(--surface); color: var(--muted);
       font-family: inherit; transition: all .2s;
+      display: flex; align-items: center; gap: 8px;
     }
     .tab-btn:hover { border-color: var(--border2); color: var(--text); }
     .tab-btn.active { background: rgba(212,168,67,.1); color: var(--gold); border-color: var(--gold-dim); }
+    .tab-btn img { width: 20px; height: 20px; object-fit: contain; }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; animation: fadeIn .3s ease; }
 
+    /* ── Projects ── */
     .proj-grid {
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 12px; margin-bottom: 1.6rem;
@@ -292,83 +340,6 @@
       .stats-row { grid-template-columns: repeat(2,1fr); }
       .hero { padding: 2rem 1.25rem; }
     }
-
-.wheel-wrapper {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  margin-bottom: 1.6rem;
-  overflow: hidden;
-}
-.wheel-wrapper::before {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0;
-  width: 60px; z-index: 2;
-  background: linear-gradient(90deg, var(--bg), transparent);
-  pointer-events: none;
-}
-.wheel-wrapper::after {
-  content: '';
-  position: absolute; right: 0; top: 0; bottom: 0;
-  width: 60px; z-index: 2;
-  background: linear-gradient(270deg, var(--bg), transparent);
-  pointer-events: none;
-}
-.wheel-track {
-  display: flex;
-  gap: 16px;
-  position: absolute;
-  top: 0; left: 0;
-  height: 100%;
-  animation: wheelSpin 18s linear infinite;
-  width: max-content;
-}
-.wheel-wrapper:hover .wheel-track {
-  animation-play-state: paused;
-}
-@keyframes wheelSpin {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.cert-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  padding: 1rem 1.1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  width: 190px;
-  flex-shrink: 0;
-  height: 200px;
-  transition: all .35s ease;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 12px rgba(212,168,67,.08), 0 0 25px rgba(212,168,67,.04);
-  cursor: default;
-}
-.cert-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-  opacity: 0; transition: opacity .3s;
-}
-.cert-card:hover {
-  border-color: var(--gold-dim);
-  transform: translateY(-4px) scale(1.03);
-  box-shadow: 0 0 15px rgba(212,168,67,.25), 0 0 35px rgba(212,168,67,.12), 0 0 60px rgba(212,168,67,.06);
-  z-index: 10;
-}
-.cert-card:hover::before { opacity: 1; }
-.cert-card img {
-  transition: filter .35s ease;
-  filter: drop-shadow(0 0 4px rgba(212,168,67,.2));
-}
-.cert-card:hover img {
-  filter: drop-shadow(0 0 8px rgba(212,168,67,.7));
-}
-.cert-name   { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.35; }
-.cert-issuer { font-size: 12px; color: var(--muted); }
-.cert-exp    { font-size: 11px; color: #4a3a30; margin-top: 3px; }
   </style>
 </head>
 <body>
@@ -394,7 +365,7 @@
       <span class="badge badge-gold">Splunk Certified</span>
       <span class="badge badge-red">AWS in Progress</span>
     </div>
-    <div class="links"> 
+    <div class="links">
       <a class="link-btn" href="https://www.linkedin.com/in/wagnerriveradiaz/" target="_blank">
         <span class="link-dot" style="background:#4a90d4"></span>LinkedIn
       </a>
@@ -418,81 +389,122 @@
 
   <div class="section-label reveal">Certifications</div>
   <div class="wheel-wrapper reveal">
-  <div class="wheel-track">
-    <div class="cert-card">
-      <img src="Sec+ Credly logo.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
-      <div class="cert-name">CompTIA Security+</div>
-  <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Jul 2025</div>
-  <div class="cert-exp">Expires Jul 2028</div>
-  <a href="https://www.credly.com/badges/e4786f22-8205-4cc9-96d4-7861d6dc1028/public_url" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;"> Verify on Credly</a>
-  </div>
-</div>
-    <div class="cert-card">
-      <img src="Cysa+.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
-      <div class="cert-name">CompTIA CySA+</div>
-      <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Oct 2025</div>
-      <div class="cert-exp">Expires Oct 2028</div>
-      <a href="https://www.credly.com/badges/e9da5c23-8b0b-4d6c-8495-3202b1dd55d6/public_url" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;"> Verify on Credly</a>
-  </div>
-</div>
-    <div class="cert-card">
-      <img src="CSAP.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
-      <div class="cert-name">Security Analytics Professional (CSAP)</div>
-      <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Oct 2025</div>
-      <div class="cert-exp">Stackable — Sec+ &amp; CySA+</div>
-      <a href="https://www.credly.com/badges/04662226-dcd0-4c82-8031-9b9e9970c68d/public_url" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;"> Verify on Credly</a>
-  </div>
-</div>
-    <div class="cert-card">
-      <img src="Splunk-Emblem.png" width="44" style="border-radius:8px; margin-bottom:6px;" />
-      <div class="cert-name">Splunk Core Certified User</div>
-      <div class="cert-issuer">Splunk &nbsp;·&nbsp; Nov 2025</div>
-      <div class="cert-exp">Expires Nov 2028</div>
-      <a href="https://www.credly.com/go/QMPu4sPR" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;"> Verify on Credly</a>
+    <div class="wheel-track">
+
+      <!-- ===== ORIGINAL SET ===== -->
+      <div class="cert-card">
+        <img src="Sec+ Credly logo.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
+        <div class="cert-name">CompTIA Security+</div>
+        <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Jul 2025</div>
+        <div class="cert-exp">Expires Jul 2028</div>
+        <a href="https://www.credly.com/badges/e4786f22-8205-4cc9-96d4-7861d6dc1028/public_url" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;">✓ Verify on Credly</a>
+      </div>
+
+      <div class="cert-card">
+        <img src="Cysa+.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
+        <div class="cert-name">CompTIA CySA+</div>
+        <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Oct 2025</div>
+        <div class="cert-exp">Expires Oct 2028</div>
+        <a href="https://www.credly.com/badges/e9da5c23-8b0b-4d6c-8495-3202b1dd55d6/public_url" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;">✓ Verify on Credly</a>
+      </div>
+
+      <div class="cert-card">
+        <img src="CSAP.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
+        <div class="cert-name">Security Analytics Professional (CSAP)</div>
+        <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Oct 2025</div>
+        <div class="cert-exp">Stackable — Sec+ &amp; CySA+</div>
+        <a href="https://www.credly.com/badges/04662226-dcd0-4c82-8031-9b9e9970c68d/public_url" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;">✓ Verify on Credly</a>
+      </div>
+
+      <div class="cert-card">
+        <img src="Splunk-Emblem.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
+        <div class="cert-name">Splunk Core Certified User</div>
+        <div class="cert-issuer">Splunk &nbsp;·&nbsp; Nov 2025</div>
+        <div class="cert-exp">Expires Nov 2028</div>
+        <a href="https://www.credly.com/go/QMPu4sPR" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;">✓ Verify on Credly</a>
+      </div>
+
+      <div class="cert-card">
+        <img src="Sec+ Credly logo.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
+        <div class="cert-name">Endpoint Security+</div>
+        <div class="cert-issuer">Cisco &nbsp;·&nbsp; Aug 2025</div>
+        <div class="cert-exp">Expires N/A</div>
+        <a href="https://www.credly.com/earner/earned/share/be9a12ab-111e-492f-be86-748b353b752d" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;">✓ Verify on Credly</a>
+      </div>
+
+      <!-- ===== DUPLICATE SET — keeps loop seamless ===== -->
+      <div class="cert-card">
+        <img src="Sec+ Credly logo.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
+        <div class="cert-name">CompTIA Security+</div>
+        <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Jul 2025</div>
+        <div class="cert-exp">Expires Jul 2028</div>
+        <a href="https://www.credly.com/badges/e4786f22-8205-4cc9-96d4-7861d6dc1028/public_url" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;">✓ Verify on Credly</a>
+      </div>
+
+      <div class="cert-card">
+        <img src="Cysa+.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
+        <div class="cert-name">CompTIA CySA+</div>
+        <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Oct 2025</div>
+        <div class="cert-exp">Expires Oct 2028</div>
+        <a href="https://www.credly.com/badges/e9da5c23-8b0b-4d6c-8495-3202b1dd55d6/public_url" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;">✓ Verify on Credly</a>
+      </div>
+
+      <div class="cert-card">
+        <img src="CSAP.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
+        <div class="cert-name">Security Analytics Professional (CSAP)</div>
+        <div class="cert-issuer">CompTIA &nbsp;·&nbsp; Oct 2025</div>
+        <div class="cert-exp">Stackable — Sec+ &amp; CySA+</div>
+        <a href="https://www.credly.com/badges/04662226-dcd0-4c82-8031-9b9e9970c68d/public_url" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;">✓ Verify on Credly</a>
+      </div>
+
+      <div class="cert-card">
+        <img src="Splunk-Emblem.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
+        <div class="cert-name">Splunk Core Certified User</div>
+        <div class="cert-issuer">Splunk &nbsp;·&nbsp; Nov 2025</div>
+        <div class="cert-exp">Expires Nov 2028</div>
+        <a href="https://www.credly.com/go/QMPu4sPR" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;">✓ Verify on Credly</a>
+      </div>
+
+      <div class="cert-card">
+        <img src="Sec+ Credly logo.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
+        <div class="cert-name">Endpoint Security+</div>
+        <div class="cert-issuer">Cisco &nbsp;·&nbsp; Aug 2025</div>
+        <div class="cert-exp">Expires N/A</div>
+        <a href="https://www.credly.com/earner/earned/share/be9a12ab-111e-492f-be86-748b353b752d" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;">✓ Verify on Credly</a>
+      </div>
+
     </div>
   </div>
-  <div class="section-label reveal">Certifications</div>
-  <div class="certs-grid reveal">
-    <div class="cert-card">
-      <img src="Sec+ Credly logo.png" width="48" style="border-radius:8px; margin-bottom:6px;" />
-      <div class="cert-name">Endpoint Security+</div>
-  <div class="cert-issuer">Cisco &nbsp;·&nbsp; Aug 2025</div>
-  <div class="cert-exp">Expires N/A </div>
-  <a href="https://www.credly.com/earner/earned/share/be9a12ab-111e-492f-be86-748b353b752d" target="_blank" style="font-size:11px; color:var(--gold); margin-top:4px;"> Verify on Credly</a>
-  </div>
-</div>
-    
+
   <div class="stats-row reveal">
-    <div class="stat-card"><div class="stat-num">6</div><div class="stat-lbl">Certifications</div></div>
-    <div class="stat-card"><div class="stat-num">2026</div><div class="stat-lbl">Active since</div></div>
-    <div class="stat-card"><div class="stat-num">
-      <img src="AWS.png" width="52" style=vertical-align:middle;>
-    </div><div class="stat-lbl">AWS in progress</div></div>
+    <div class="stat-card"><div class="stat-num">5</div><div class="stat-lbl">Certifications</div></div>
+    <div class="stat-card"><div class="stat-num">2025</div><div class="stat-lbl">Active since</div></div>
+    <div class="stat-card"><div class="stat-num">☁️</div><div class="stat-lbl">AWS in progress</div></div>
     <div class="stat-card"><div class="stat-num">∞</div><div class="stat-lbl">Still learning</div></div>
   </div>
 
   <div class="section-label reveal">Projects</div>
   <div class="tabs reveal">
-    <button class="tab-btn active" onclick="switchTab('all',this)"> ✦ ALL
-      </button>
+    <button class="tab-btn active" onclick="switchTab('all',this)">✦ All</button>
     <button class="tab-btn" onclick="switchTab('blue',this)">
-       <img src="Blue Team.png" width="16" style="vertical-align:middle; margin-right:6px;">Blue Team
+      <img src="Blue Team.png" />Blue Team
     </button>
     <button class="tab-btn" onclick="switchTab('red',this)">
-      <img src="Red Team.png" width="16" style="vertical-align:middle; margin-right:6px;" >Red Team 
+      <img src="Red Team.png" />Red Team
     </button>
     <button class="tab-btn" onclick="switchTab('aws',this)">
-      <img src="AWS.png" width="18" style="vertical-align:middle; margin-right:6px;">AWS / Cloud or AWS / Cloud
+      <img src="AWS.png" />AWS / Cloud
     </button>
-    <button class="tab-btn" onclick="switchTab('other',this)"
-      <img src="Files.png" width="18" style="vertical-align:middle; margin-right:6px;"
-      >Other</button>
+    <button class="tab-btn" onclick="switchTab('other',this)">
+      <img src="Files.png" />Other
+    </button>
   </div>
 
   <div id="tab-all" class="tab-panel active reveal">
     <!--
     =====================================================================
-    HOW TO ADD A PROJECT — copy this block and paste it above the empty-state div:
+    HOW TO ADD A PROJECT — copy this block and paste it above the empty-state div.
+    Also copy it into the matching tab (blue, red, aws, or other).
 
     <div class="proj-grid">
       <div class="proj-card">
@@ -517,25 +529,28 @@
   </div>
 
   <div id="tab-blue" class="tab-panel">
-    
-    <div class="empty-state"><span>
-      <img src="Blue Team.png" width="52" style="vertical-align:middle; margin-right:6px;">
-      </span>Blue team projects will appear here.</div>
-     </div>
+    <div class="empty-state">
+      <span><img src="Blue Team.png" width="36" /></span>
+      Blue team projects will appear here.
+    </div>
+  </div>
   <div id="tab-red" class="tab-panel">
-    <div class="empty-state"><span>
-     <img src="Red Team.png" width="52" style="vertical-align:middle; margin-right:6px;" >
-    </span>Red team projects will appear here.</div>
+    <div class="empty-state">
+      <span><img src="Red Team.png" width="36" /></span>
+      Red team projects will appear here.
+    </div>
   </div>
   <div id="tab-aws" class="tab-panel">
-    <div class="empty-state"><span>
-      <img src="AWS.png" width="52" style="vertical-align:middle; margin-right:6px;" >
-    </span>AWS / Cloud projects will appear here.</div>
+    <div class="empty-state">
+      <span><img src="AWS.png" width="36" /></span>
+      AWS / Cloud projects will appear here.
+    </div>
   </div>
   <div id="tab-other" class="tab-panel">
-    <div class="empty-state"><span>
-      <img src="Files.png" width="52" style="vertical-align:middle; margin-right:6px;" >
-    </span>Everything else lives here.</div>
+    <div class="empty-state">
+      <span><img src="Files.png" width="36" /></span>
+      Everything else lives here.
+    </div>
   </div>
 
   <footer class="reveal">Wagner S. Diaz &nbsp;·&nbsp; <span>✦</span> &nbsp;·&nbsp; Built with GitHub Pages</footer>
