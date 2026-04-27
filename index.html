@@ -517,27 +517,7 @@
   </div>
 
   <div id="tab-all" class="tab-panel active reveal">
-    <!--
-    =====================================================================
-    HOW TO ADD A PROJECT — copy this block and paste it above the empty-state div.
-    Also copy it into the matching tab (blue, red, aws, or other).
-
-    <div class="proj-grid">
-      <div class="proj-card">
-        <div class="proj-top">
-          <div class="proj-name">Project Name</div>
-          <div class="proj-icon">🔐</div>
-        </div>
-        <div class="proj-desc">One or two sentences about what it does.</div>
-        <a class="proj-link" href="https://github.com/WagnerSDiaz/REPO" target="_blank">→ View on GitHub</a>
-        <div class="proj-tags">
-          <span class="tag">Python</span>
-          <span class="tag">Splunk</span>
-        </div>
-      </div>
-    </div>
-    =====================================================================
-    -->
+    
     <div class="empty-state">
       <span>✦</span>
       Projects incoming — each one will appear here and sort into the right tab automatically.
@@ -545,11 +525,29 @@
   </div>
 
   <div id="tab-blue" class="tab-panel">
-    <div class="empty-state">
-      <span><img src="Blue Team.png" width="36" /></span>
-      Blue team projects will appear here.
+    <div class="inner-tabs">
+      <button class="inner-tab-btn active" oneclick="switchInnerTab('blue-siem', this) "> SIEM & Log Analysis</button>
+        <button class="inner-tab-btn active" oneclick="switchInnerTab('blue-ir', this) "> Incident Response </button>
+      <button class="inner-tab-btn active" oneclick="switchInnerTab('blue-threat', this) "> Threat Hunting </button>
+      <button class="inner-tab-btn active" oneclick="switchInnerTab('blue-vuln', this) "> Vulnerability Management </button>
+      <button class="inner-tab-btn active" oneclick="switchInnerTab('blue-auto', this) "> Automation & Scripting </button>
     </div>
+    <div id="blue-siem" class="inner-panel active">
+      <div class="empty-state"></span> SIEM & Log Analysis projects will appear here. </div>
   </div>
+        <div id="blue-ir" class="inner-panel">
+    <div class="empty-state"></span> Incident Response Projects will appear here. </div>
+   </div>
+        <div id="blue-threat" class="inner-panel">
+    <div class="empty-state"></span> Threat Hunting Projects will appear here. </div>
+           </div>
+           <div id="blue-vuln" class="inner-panel">
+    <div class="empty-state"></span> Vulnerability Management will appear here. </div>
+           </div>
+     <div id="blue-auto" class="inner-panel">
+    <div class="empty-state"> </span>Automation & Scripting projects will appear here.</div>
+  </div>
+</div>
   <div id="tab-red" class="tab-panel">
     <div class="empty-state">
       <span><img src="Red Team.png" width="36" /></span>
