@@ -520,7 +520,7 @@
     
     <div class="empty-state">
       <span>✦</span>
-      Projects incoming — each one will appear here and sort into the right tab automatically.
+      Projects incoming — each one will appear here and sort into the right tab automatically
     </div>
   </div>
 
@@ -533,19 +533,19 @@
       <button class="inner-tab-btn active" oneclick="switchInnerTab('blue-auto', this) "> Automation & Scripting </button>
     </div>
     <div id="blue-siem" class="inner-panel active">
-      <div class="empty-state"></span> SIEM & Log Analysis projects will appear here. </div>
+      <div class="empty-state"></span> SIEM & Log Analysis projects will appear here </div>
   </div>
         <div id="blue-ir" class="inner-panel">
-    <div class="empty-state"></span> Incident Response Projects will appear here. </div>
+    <div class="empty-state"></span> Incident Response Projects will appear here </div>
    </div>
         <div id="blue-threat" class="inner-panel">
-    <div class="empty-state"></span> Threat Hunting Projects will appear here. </div>
+    <div class="empty-state"></span> Threat Hunting Projects will appear here </div>
            </div>
            <div id="blue-vuln" class="inner-panel">
-    <div class="empty-state"></span> Vulnerability Management will appear here. </div>
+    <div class="empty-state"></span> Vulnerability Management will appear here </div>
            </div>
      <div id="blue-auto" class="inner-panel">
-    <div class="empty-state"> </span>Automation & Scripting projects will appear here.</div>
+    <div class="empty-state"> </span>Automation & Scripting projects will appear here</div>
   </div>
 </div>
   <div id="tab-red" class="tab-panel">
@@ -556,12 +556,30 @@
   </div>
   <div id="tab-aws" class="tab-panel">
     <div class="empty-state">
-      <span><img src="AWS.png" width="36" /></span>
-      AWS / Cloud projects will appear here.
-    </div>
+     <div id="tab-aws" class="tab-panel">
+  <div class="inner-tabs">
+    <button class="inner-tab-btn active" onclick="switchInnerTab('aws-labs', this)"> Labs</button>
+    <button class="inner-tab-btn" onclick="switchInnerTab('aws-projects', this)"> Projects</button>
+    <button class="inner-tab-btn" onclick="switchInnerTab('aws-security', this)"> Security & IAM</button>
+    <button class="inner-tab-btn" onclick="switchInnerTab('aws-infra', this)"> Infrastructure</button>
+    <button class="inner-tab-btn" onclick="switchInnerTab('aws-auto', this)"> automation</button>
   </div>
-  <div id="tab-other" class="tab-panel">
-    <div class="empty-state">
+  <div id="aws-labs" class="inner-panel active">
+    <div class="empty-state"><span> </span>AWS labs will appear here</div>
+  </div>
+  <div id="aws-projects" class="inner-panel">
+    <div class="empty-state"><span> </span>AWS projects will appear here</div>
+  </div>
+  <div id="aws-security" class="inner-panel">
+    <div class="empty-state"><span> </span>Security & IAM projects will appear here</div>
+  </div>
+  <div id="aws-infra" class="inner-panel">
+    <div class="empty-state"><span> </span>Infrastructure projects will appear here</div>
+  </div>
+  <div id="aws-auto" class="inner-panel">
+    <div class="empty-state"><span> </span>Automation projects will appear here</div>
+  </div>
+</div>
       <span><img src="Files.png" width="36" /></span>
       Everything else lives here.
     </div>
