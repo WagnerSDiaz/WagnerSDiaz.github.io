@@ -548,15 +548,31 @@
     <div class="empty-state"> </span>Automation & Scripting projects will appear here</div>
   </div>
 </div>
-  <div id="tab-red" class="tab-panel">
-    <div class="empty-state">
-      <span><img src="Red Team.png" width="36" /></span>
-      Red team projects will appear here.
-    </div>
+ <div id="tab-red" class="tab-panel">
+  <div class="inner-tabs">
+    <button class="inner-tab-btn active" onclick="switchInnerTab('red-recon', this)">Reconnaissance</button>
+    <button class="inner-tab-btn" onclick="switchInnerTab('red-exploit', this)">Exploitation</button>
+    <button class="inner-tab-btn" onclick="switchInnerTab('red-ctf', this)">CTF Writeups</button>
+    <button class="inner-tab-btn" onclick="switchInnerTab('red-social', this)">Social Engineering</button>
+    <button class="inner-tab-btn" onclick="switchInnerTab('red-tools', this)">Tools & Scripts</button>
   </div>
+  <div id="red-recon" class="inner-panel active">
+    <div class="empty-state"><span>—</span>Reconnaissance projects will appear here</div>
+  </div>
+  <div id="red-exploit" class="inner-panel">
+    <div class="empty-state"><span>—</span>Exploitation projects will appear here</div>
+  </div>
+  <div id="red-ctf" class="inner-panel">
+    <div class="empty-state"><span>—</span>CTF writeups will appear here</div>
+  </div>
+  <div id="red-social" class="inner-panel">
+    <div class="empty-state"><span>—</span>Social Engineering projects will appear here</div>
+  </div>
+  <div id="red-tools" class="inner-panel">
+    <div class="empty-state"><span>—</span>Tools & Scripts will appear here</div>
+  </div>
+</div>
   <div id="tab-aws" class="tab-panel">
-    <div class="empty-state">
-     <div id="tab-aws" class="tab-panel">
   <div class="inner-tabs">
     <button class="inner-tab-btn active" onclick="switchInnerTab('aws-labs', this)"> Labs</button>
     <button class="inner-tab-btn" onclick="switchInnerTab('aws-projects', this)"> Projects</button>
@@ -565,27 +581,37 @@
     <button class="inner-tab-btn" onclick="switchInnerTab('aws-auto', this)"> automation</button>
   </div>
   <div id="aws-labs" class="inner-panel active">
-    <div class="empty-state"><span> </span>AWS labs will appear here</div>
+    <div class="empty-state"><span>-</span>AWS labs will appear here</div>
   </div>
   <div id="aws-projects" class="inner-panel">
-    <div class="empty-state"><span> </span>AWS projects will appear here</div>
+    <div class="empty-state"><span>-</span>AWS projects will appear here</div>
   </div>
   <div id="aws-security" class="inner-panel">
-    <div class="empty-state"><span> </span>Security & IAM projects will appear here</div>
+    <div class="empty-state"><span>-</span>Security & IAM projects will appear here</div>
   </div>
   <div id="aws-infra" class="inner-panel">
-    <div class="empty-state"><span> </span>Infrastructure projects will appear here</div>
+    <div class="empty-state"><span>-</span>Infrastructure projects will appear here</div>
   </div>
   <div id="aws-auto" class="inner-panel">
-    <div class="empty-state"><span> </span>Automation projects will appear here</div>
+    <div class="empty-state"><span>-</span>Automation projects will appear here</div>
   </div>
 </div> 
-      <div id="Files" class="Files">
-    <div class="empty-state">
-      <span><img src="Files.png" width="36" /></span>
-      Everything else lives here
-    </div>
+   <div id="tab-other" class="tab-panel">
+  <div class="inner-tabs">
+    <button class="inner-tab-btn active" onclick="switchInnerTab('other-general', this)">General</button>
+    <button class="inner-tab-btn" onclick="switchInnerTab('other-learning', this)">Learning & Courses</button>
+    <button class="inner-tab-btn" onclick="switchInnerTab('other-misc', this)">Misc</button>
   </div>
+  <div id="other-general" class="inner-panel active">
+    <div class="empty-state"><span>—</span>General projects will appear here.</div>
+  </div>
+  <div id="other-learning" class="inner-panel">
+    <div class="empty-state"><span>—</span>Learning & course projects will appear here.</div>
+  </div>
+  <div id="other-misc" class="inner-panel">
+    <div class="empty-state"><span>—</span>Miscellaneous projects will appear here.</div>
+  </div>
+</div>
 
   <footer class="reveal">Wagner S. Diaz &nbsp;·&nbsp; <span>✦</span> &nbsp;·&nbsp; Built with GitHub Pages</footer>
 </div>
