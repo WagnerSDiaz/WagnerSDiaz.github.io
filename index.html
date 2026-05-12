@@ -116,6 +116,12 @@
       position: absolute; top: -10px; right: -8px;
       font-size: 14px; color: var(--gold); opacity: .85;
     }
+    
+    .avatar-img {
+  width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0;
+  object-fit: cover; border: 2px solid var(--gold-dim);
+  animation: glow 4s ease-in-out infinite, float 6s ease-in-out infinite;
+    }
 
     .hero-name {
       font-size: 28px; font-weight: 700;
@@ -352,7 +358,7 @@
     <div class="hero-orb1"></div>
     <div class="hero-orb2"></div>
     <div class="avatar-row">
-    <img src="CyberSecurity Portfolio 400x400.png" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid var(--gold-dim);"/>
+    <img src="CyberSecurity Portfolio 400x400.png" class="avatar-img" />
       <div>
         <div class="hero-name">Wagner S. Diaz</div>
         <div class="hero-sub"><span id="typed"></span><span class="cursor"></span></div>
